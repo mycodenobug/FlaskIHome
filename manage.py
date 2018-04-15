@@ -6,20 +6,7 @@ from flask_session import Session
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 import redis
-
-
-class Config(object):
-    DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'mysql://root:mysql@192.168.147.3:3306/ihome'
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-    REDIS_HOST = '127.0.0.1'
-    REDIS_PORT = 6379
-    SECRET_KEY = '6s9QxfpgdAfDrHuExnHKurQtadXJzVhzqiLan0erOxBks/Tj+2ujZtjugk48Iy+k'
-    SESSION_TYPE = 'redis'
-    SESSION_REDIS = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT)
-    SESSION_USE_SIGNER = True
-    PERMANENT_SESSION_LIFETIME = 86400 * 2
-
+from config import Config
 
 app = Flask(__name__)
 
@@ -37,7 +24,9 @@ Session(app)
 
 manage = Manager(app)
 
-Migrate.add_command('db', MigrateCommand)
+Migrate(app, db)
+
+manage.add_command('db', MigrateCommand)
 
 
 @app.route('/', methods=['POST', 'GET'])
