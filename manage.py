@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import CSRFProtect
 from flask_session import Session
 from flask_script import Manager
-from flask_migrate import migrate, MigrateCommand
+from flask_migrate import Migrate, MigrateCommand
 import redis
 
 
@@ -37,7 +37,7 @@ Session(app)
 
 manage = Manager(app)
 
-manage.add_command('db', MigrateCommand)
+Migrate.add_command('db', MigrateCommand)
 
 
 @app.route('/', methods=['POST', 'GET'])
