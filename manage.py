@@ -31,8 +31,6 @@ manage.add_command('db', MigrateCommand)
 
 @app.route('/', methods=['POST', 'GET'])
 def hello_world():
-    # redis_store.set('name', 'laowang')
-    # session['name'] = 'laoli'
     return 'Hello World!'
 
 
