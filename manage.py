@@ -3,6 +3,8 @@ from flask import Flask, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import CSRFProtect
 from flask_session import Session
+from flask_script import Manager
+from flask_migrate import migrate, MigrateCommand
 import redis
 
 
@@ -33,6 +35,10 @@ CSRFProtect(app)
 
 Session(app)
 
+manage = Manager(app)
+
+manage.add_command('db', MigrateCommand)
+
 
 @app.route('/', methods=['POST', 'GET'])
 def hello_world():
@@ -42,4 +48,5 @@ def hello_world():
 
 
 if __name__ == '__main__':
-    app.run()
+    # app.run()
+    manage.run()
