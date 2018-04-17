@@ -27,5 +27,10 @@ def create_app(config_name):
     CSRFProtect(app)
 
     Session(app)
+    # 可以在register里面指定 url_prefix(名字必须为url_prefix) 默认为'/'
+    # 为了防止网址的冲突可以使用 url_for(名字不固定),定位到指定函数
+    # 蓝图要在注册时导入,否则可能会出现循环导入
+    from api_1_0 import api
+    app.register_blueprint(api, url_for='api.index')
 
     return app

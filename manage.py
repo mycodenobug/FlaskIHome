@@ -11,11 +11,6 @@ Migrate(app, db)
 
 manage.add_command('db', MigrateCommand)
 
-
-@app.route('/', methods=['POST', 'GET'])
-def hello_world():
-    return 'Hello World!'
-
-
 if __name__ == '__main__':
+    print app.url_map
     manage.run()
