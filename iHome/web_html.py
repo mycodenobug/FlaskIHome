@@ -1,12 +1,23 @@
 # *_*coding:utf-8 *_*
 from flask import Blueprint, current_app
 
+# from werkzeug.routing import BaseConverter
+#
+#
+# class RegexConverter(BaseConverter):
+#     def __init__(self, url_map, regex):
+#         super(RegexConverter, self).__init__(self, url_map)
+#         self.regex = regex
+
 
 html = Blueprint('html', __name__)
 
 
-@html.route('/<file_name>')
+@html.route('/<re(".*"):file_name>')
 def static_fork(file_name):
-    file_name = 'html/' + file_name
+    if file_name == '':
+        file_name = 'index.html'
+    if file_name != 'favicon.ico':
+        file_name = 'html/' + file_name
 
     return current_app.send_static_file(file_name)
