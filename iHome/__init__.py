@@ -31,6 +31,10 @@ def create_app(config_name):
     # 为了防止网址的冲突可以使用 url_for(名字不固定),定位到指定函数
     # 蓝图要在注册时导入,否则可能会出现循环导入
     from api_1_0 import api
-    app.register_blueprint(api, url_for='api.index')
+    # app.register_blueprint(api, url_for='api.index')
+    app.register_blueprint(api, url_prefix='/api/v1.0')
+
+    import web_html
+    app.register_blueprint(web_html.html)
 
     return app
