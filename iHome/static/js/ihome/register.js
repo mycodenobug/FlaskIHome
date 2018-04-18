@@ -1,4 +1,3 @@
-alert('a')
 function getCookie(name) {
     var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
     return r ? r[1] : undefined;
@@ -20,8 +19,8 @@ var imageCodeId = ""
 // 生成一个图片验证码的编号，并设置页面中图片验证码img标签的src属性
 function generateImageCode() {
     imageCodeId = generateUUID();
-    var Url = '/api/v1_0/image_code?cur=' + imageCodeId;
-    $('.image-code image').attr('src', Url);
+    var Url = '/api/v1_0/image_code?cur=' +  imageCodeId;
+    $('.image-code>img').attr('src', Url);
 }
 
 function sendSMSCode() {
@@ -29,6 +28,7 @@ function sendSMSCode() {
     $(".phonecode-a").removeAttr("onclick");
     var mobile = $("#mobile").val();
     if (!mobile) {
+        alert('a')
         $("#mobile-err span").html("请填写正确的手机号！");
         $("#mobile-err").show();
         $(".phonecode-a").attr("onclick", "sendSMSCode();");
@@ -47,8 +47,7 @@ function sendSMSCode() {
 }
 
 $(document).ready(function() {
-    generateImageCode();
-    // 生成一个图片验证码的编号，并设置页面中图片验证码img标签的src属性
+    generateImageCode(); // 生成一个图片验证码的编号，并设置页面中图片验证码img标签的src属性
     $("#mobile").focus(function(){
         $("#mobile-err").hide();
     });

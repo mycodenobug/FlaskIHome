@@ -10,8 +10,7 @@ __time__ = '2018/04/18 下午1:06'
 @api.route('/image_code')
 def verify():
     cur = request.args.get('cur')
-    pre = request.args.get('pre')
-    print cur, pre
+    print cur
     name, text, image = captcha.generate_captcha()
     print name, text
     return image
