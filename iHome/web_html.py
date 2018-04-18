@@ -1,5 +1,6 @@
 # *_*coding:utf-8 *_*
-from flask import Blueprint, current_app
+from flask import Blueprint, current_app, make_response
+from flask_wtf.csrf import generate_csrf
 
 # from werkzeug.routing import BaseConverter
 #
@@ -19,5 +20,7 @@ def static_fork(file_name):
         file_name = 'index.html'
     if file_name != 'favicon.ico':
         file_name = 'html/' + file_name
-
-    return current_app.send_static_file(file_name)
+    csrf_token = generate_csrf()
+    response = make_response(current_app.send_static_file(file_name))
+    response.set_cookie('csrf_token', csrf_token)
+    return response
