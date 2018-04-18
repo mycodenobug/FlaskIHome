@@ -1,5 +1,6 @@
 # *_*coding:utf-8 *_*
 import redis
+import logging
 
 
 class Config(object):
@@ -16,11 +17,12 @@ class Config(object):
 
 class DevelopmentConfig(Config):
     DEBUG = True
+    log_level = logging.DEBUG
 
 
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'mysql://root:mysql@192.168.147.3:3306/ihome'
-
+    log_level = logging.WARNING
 
 config_dict = {
     'development': DevelopmentConfig,
