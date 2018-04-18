@@ -10,6 +10,7 @@ from utils.commons import RegexConverter
 
 db = SQLAlchemy()
 
+redis_store = redis.StrictRedis()
 
 def create_app(config_name):
     app = Flask(__name__)
@@ -24,7 +25,7 @@ def create_app(config_name):
 
     db.init_app(app)
 
-    redis_store = redis.StrictRedis(host=config.REDIS_HOST, port=config.REDIS_PORT)
+    # redis_store = redis.StrictRedis(host=config.REDIS_HOST, port=config.REDIS_PORT)
 
     CSRFProtect(app)
 
@@ -36,7 +37,7 @@ def create_app(config_name):
 
     from api_1_0 import api
     # app.register_blueprint(api, url_for='api.index')
-    app.register_blueprint(api, url_prefix='/api/v1.0')
+    app.register_blueprint(api, url_prefix='/api/v1_0')
 
     import web_html
     app.register_blueprint(web_html.html)
