@@ -21,4 +21,5 @@ def register ():
     # 校验imagecode, phonecode
     # 验证两次密码是否一致
     # 校验全部通过, 将用户数据存储到数据库,重定向到首页
+
     return
