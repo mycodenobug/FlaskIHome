@@ -68,22 +68,23 @@ function sendSMSCode() {
                     else {
                         clearInterval(a)
                         $('.phonecode-a').html('获取验证码')
-                        $('#phone-code-err').html('验证码已失效,请点击重新发送').siblings('#mobile-err').hide()
+                        $('#phone-code-err').html('验证码已失效,请点击重新发送')
                         $(".phonecode-a").attr("onclick", "sendSMSCode();");
                     }
                     num--
                 }, 1000)
                 $('#phone-code-err').html(e.errmsg)
-                $('#phone-code-err').show().siblings('#mobile-err').hide()
+                $('#mobile-err').hide()
+                $('#phone-code-err').show()
             }
             if (e.errno == 4103) {
                 $('#mobile-err span').html(e.errmsg)
                 $('#mobile-err').show().siblings('#mobile-err').hide()
                 $(".phonecode-a").attr("onclick", "sendSMSCode();");
             }
-            if (e.errno == 4001 || e.errno == 4004 || e.errno == 4002) {
+            if (e.errno == 4001) {
                 $('#image-code-err span').html(e.errmsg)
-                $('#image-code-err').show().siblings('#mobile-err').hide()
+                $('#image-code-err').show()
                 $(".phonecode-a").attr("onclick", "sendSMSCode();");
             }
         }

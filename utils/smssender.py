@@ -1,5 +1,3 @@
-# coding=gbk
-
 # coding=utf-8
 
 # -*- coding: UTF-8 -*-
@@ -7,36 +5,36 @@
 from libs.yuntongxin.CCPRestSDK import REST
 import ConfigParser
 
-# Ö÷ÕÊºÅ
+# ä¸»å¸å·
 accountSid = '8a216da862cc8f910162d84948c7089f'
 
-# Ö÷ÕÊºÅToken
+# ä¸»å¸å·Token
 accountToken = '769e60acf00740c9944930680b8756be'
 
-# Ó¦ÓÃId
+# åº”ç”¨Id
 appId = '8a216da862cc8f910162d849492208a6'
 
-# ÇëÇóµØÖ·£¬¸ñÊ½ÈçÏÂ£¬²»ĞèÒªĞ´http://
+# è¯·æ±‚åœ°å€ï¼Œæ ¼å¼å¦‚ä¸‹ï¼Œä¸éœ€è¦å†™http://
 serverIP = 'app.cloopen.com'
 
-# ÇëÇó¶Ë¿Ú
+# è¯·æ±‚ç«¯å£
 serverPort = '8883'
 
-# REST°æ±¾ºÅ
+# RESTç‰ˆæœ¬å·
 softVersion = '2013-12-26'
 
 
-# ·¢ËÍÄ£°å¶ÌĞÅ
-# @param to ÊÖ»úºÅÂë
-# @param datas ÄÚÈİÊı¾İ ¸ñÊ½ÎªÊı×é ÀıÈç£º{'12','34'}£¬Èç²»ĞèÌæ»»ÇëÌî ''
-# @param $tempId Ä£°åId
+# å‘é€æ¨¡æ¿çŸ­ä¿¡
+# @param to æ‰‹æœºå·ç 
+# @param datas å†…å®¹æ•°æ® æ ¼å¼ä¸ºæ•°ç»„ ä¾‹å¦‚ï¼š{'12','34'}ï¼Œå¦‚ä¸éœ€æ›¿æ¢è¯·å¡« ''
+# @param $tempId æ¨¡æ¿Id
 
 class CCP(object):
     def __new__(cls, *args, **kwargs):
-        # ÅĞ¶Ïµ±Ç°ÀàÓĞÃ»ÓĞ_instanceÕâ¸ö¶ÔÏó
+        # åˆ¤æ–­å½“å‰ç±»æœ‰æ²¡æœ‰_instanceè¿™ä¸ªå¯¹è±¡
         if not hasattr(cls, '_instance'):
             obj = super(CCP, cls).__new__(cls, *args, **kwargs)
-            # ³õÊ¼»¯sdk
+            # åˆå§‹åŒ–sdk
             obj.rest = REST(serverIP, serverPort, softVersion)
             obj.rest.setAccount(accountSid, accountToken)
             obj.rest.setAppId(appId)
@@ -50,14 +48,25 @@ class CCP(object):
     #
     def sendtemplatessms(self, to, datas, tempId):
         result = self.rest.sendTemplateSMS(to, datas, tempId)
-        for k, v in result.iteritems():
-
-            if k == 'templateSMS':
-                for k, s in v.iteritems():
-                    print '%s:%s' % (k, s)
-            else:
-                print '%s:%s' % (k, v)
+        print result.get('statusCode')
+        if result.get('statusCode') == '000000':
+            return 1
+        else:
+            return 0
 
 
-if __name__ == '__main__':
-    CCP().sendtemplatessms(13520616314, ['123456', 2], 1)
+# if __name__ == '__main__':
+#     mobile = 13520616314
+#     mobile = 13562493856
+#     sms_cod = 123456
+#     try:
+#         a = CCP().sendtemplatessms(mobile, [sms_cod, '5'], 1)
+#     except Exception as e:
+#         print u'çŸ­ä¿¡éªŒè¯ç å‘é€å¤±è´¥'
+#         raise
+#     if mobile == 000000:
+#         print u'çŸ­ä¿¡å‘é€æˆåŠŸ'
+#     else:
+#         print u'çŸ­ä¿¡éªŒè¯ç å‘é€å¤±è´¥'
+#     print type(a)
+#     print a

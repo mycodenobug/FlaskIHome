@@ -1,5 +1,6 @@
 # *_*coding:utf-8 *_*
 from . import api
+from utils.smssender import CCP
 from utils.captcha.captcha import captcha
 from flask import request, current_app, jsonify, make_response
 from iHome import redis_store, constants
@@ -7,6 +8,7 @@ from iHome.constants import IMAGE_CODE_REDIS_EXPIRES
 from iHome.response_code import RET
 import json
 import re
+import random
 
 __author__ = 'Wang'
 __time__ = '2018/04/18 下午1:06'
@@ -27,7 +29,6 @@ def sms_code():
     # 调用接口, 发送短信 验证码
     # 如果出错返回errno: & errmsg:
     # 返回状态信息
-
     # 获取手机号, 验证码
 
     # 获取手机号, 验证码
@@ -38,7 +39,7 @@ def sms_code():
     imageId = req_dic.get('imageId')
     # 判断数据是否存在
     if not all([mobile, imageCode, imageId]):
-        return jsonify(errno=RET.DATAERR, errmsg=u'数据不完整')
+        return jsonify(errno=RET.PARAMERR, errmsg=u'数据不完整')
     # 判断是否是手机号
     if not re.match(r'1[3456789]\d{9}', mobile):
         return jsonify(errno=RET.PARAMERR, errmsg=u'手机号错误')
@@ -48,17 +49,30 @@ def sms_code():
         red_data = redis_store.get('image_code:%s' % imageId)
     except Exception as e:
         current_app.logger.error(u'查不到数据')
-        return jsonify(errno=RET.NODATA, errmsg=u'查询验证码失败')
+        return jsonify(errno=RET.DBERR, errmsg=u'查询验证码失败')
     # 如果没有查到数据, 验证码不存在
     if not red_data:
         return jsonify(errno=RET.DBERR, errmsg=u'验证码过期')
     # 判断验证码是否输入正确, 不正确返回错误信息
     if red_data != imageCode:
-        return jsonify(errno=RET.DATAERR, errmsg=u'验证码输入错误')
+        return jsonify(errno=RET.DBERR, errmsg=u'验证码输入错误')
     # 调用接口, 发送短信 验证码
     # 如果出错返回errno: & errmsg:
-
-    return jsonify(errno=RET.OK, errmsg=u'短信发送成功')
+    sms_cod = '%06.f' % random.randint(0, 999999)
+    print '短信验证码:%s' % sms_cod
+    try:
+        redis_store.set('%ssms_code:' % mobile, sms_cod)
+    except Exception as e:
+        current_app.logger.error(e)
+        return jsonify(errno=RET.THIRDERR, errmsg=u'短信验证码发送失败')
+    try:
+        status = CCP().sendtemplatessms(mobile, [sms_cod, '1'], 1)
+    except Exception as e:
+        current_app.logger.error(e)
+        return jsonify(errno=RET.THIRDERR, errmsg=u'短信验证码发送失败')
+    if status == 1:
+        return jsonify(errno=RET.OK, errmsg=u'短信发送成功')
+    return jsonify(errno=RET.THIRDERR, errmsg=u'短信验证码发送失败')
 
 
 @api.route('/image_code')
